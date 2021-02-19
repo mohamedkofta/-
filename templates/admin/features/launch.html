@@ -1,0 +1,54 @@
+{% extends "_base.html" %}
+{% load inline_file %}
+
+{% block css %}
+<!-- <link rel="stylesheet" href="/static/css/forms.css"> -->
+<!-- <link rel="stylesheet" href="/static/css/features/launch.css"> -->
+<style>{% inline_file "/static/css/forms.css" %}</style>
+<style>{% inline_file "/static/css/features/launch.css" %}</style>
+{% endblock %}
+
+{% block subheader %}
+<div id="subheader">
+  <div>
+    <h2>Next steps for the Blink launch process</h2>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% if launch %}
+<section>
+<h3>Click through this link to file a launch-tracking bug</h3>
+  {% include "blink/launch_bug.html" %}
+</section>
+{% endif %}
+
+{% if intent %}
+<section>
+<h3>Copy and send this text for your "Intent to ..." email</h3>
+{% include "blink/intent_to_implement.html" %}
+</section>
+{% endif %}
+
+{% if 'need_api_owners_lgtms' in sections_to_show %}
+<section>
+<h3>Obtain LGTMs from 3 API Owners</h3>
+<span class="help">
+  You will need three LGTMs from API owners.
+According to the
+<a href="http://www.chromium.org/blink#launch-process">Blink Launch process</a>
+after that, you're free to ship your feature.
+</span>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block js %}
+<script>
+// Remove loading spinner at page load.
+document.body.classList.remove('loading');
+</script>
+{% endblock %}
