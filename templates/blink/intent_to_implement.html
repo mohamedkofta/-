@@ -1,0 +1,219 @@
+<p>Email to</p>
+<div class="subject">
+  blink-dev@chromium.org
+</div>
+
+<p>Subject</p>
+<div class="subject">
+  {{subject_prefix}}:
+  {{feature.name}}
+</div>
+
+{% comment %}
+  Insted of vertical margins, <br> elements are used to create line breaks
+  that can be copied and pasted into a text editor.
+{% endcomment %}
+
+<p>Body</p>
+<div class="email">
+
+  <h4>Contact emails</h4>
+  {% if not feature.owner %}None{% endif %}
+  {% for owner in feature.owner %}
+    <a href="mailto:{{owner}}">{% if forloop.last %}{{owner}}</a>{% else %}{{owner}}</a>,{% endif %}
+  {% endfor %}
+
+  <br><br><h4>Explainer</h4>
+  {% if not feature.explainer_links %}None{% endif %}
+  {% for link in feature.explainer_links %}
+    <br><a href="{{link}}">{{link}}</a>
+  {% endfor %}
+
+  <br><br><h4>Specification</h4>
+  {{feature.spec_link|urlize}}
+
+  {% if feature.doc_links %}
+    <br><br><h4>Design docs</h4>
+    {% for link in feature.doc_links %}
+      <br><a href="{{link}}">{{link}}</a>
+    {% endfor %}
+  {% endif %}
+
+  <br><br><h4>Summary</h4>
+  {{ feature.summary | urlize }}
+
+  <br><br><h4>Blink component</h4>
+  {% for c in feature.blink_components %}
+    <a href="https://bugs.chromium.org/p/chromium/issues/list?q=component:{{c}}" target="_blank">{{c}}</a>
+  {% endfor %}
+
+  {% if 'motivation' in sections_to_show %}
+    <br><br><h4>Motivation</h4>
+    {{feature.motivation|urlize}}
+
+    <br><br><h4>Initial public proposal</h4>
+    {{feature.initial_public_proposal_url|urlize}}
+  {% endif %}
+
+  {% if feature.search_tags %}
+    <br><br><h4>Search tags</h4>
+    {% for tag in feature.search_tags %}
+      <a href="/features#tags:{{tag}}">{{tag}}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+
+  {% endif %}
+
+  <br><br><h4>TAG review</h4>
+  {{feature.tag_review|urlize}}
+
+  {% if feature.tag_review_status %}
+    <br><br><h4>TAG review status</h4>
+    {{feature.tag_review_status}}
+  {% endif %}
+
+  {% if feature.origin_trial_feedback_url %}
+    <br><br><h4>Link to origin trial feedback summary</h4>
+    {{feature.origin_trial_feedback_url}}
+  {% endif %}
+
+  <br><br><h4>Risks</h4>
+  <div style="margin-left: 4em;">
+    <br><br><h4>Interoperability and Compatibility</h4>
+    {{feature.interop_compat_risks|urlize}}
+
+    <br><br><i>Gecko</i>: {{feature.ff_views.text}}
+    {% if feature.ff_views_link %}
+      (<a href="{{feature.ff_views_link}}">{{feature.ff_views_link}}</a>)
+    {% endif %}
+    {% if feature.ff_views_notes %}
+     {{feature.ff_views_notes|urlize}}
+    {% endif %}
+
+    <br><br><i>WebKit</i>: {{feature.safari_views.text}}
+    {% if feature.safari_views_link %}
+      (<a href="{{feature.safari_views_link}}">{{feature.safari_views_link}}</a>)
+    {% endif %}
+    {% if feature.safari_views_notes %}
+     {{feature.safari_views_notes|urlize}}
+    {% endif %}
+
+    <br><br><i>Web developers</i>: {{feature.web_dev_views.text}}
+    {% if feature.web_dev_views_link %}
+      (<a href="{{feature.web_dev_views_link}}">{{feature.web_dev_views_link}}</a>)
+    {% endif %}
+    {% if feature.web_dev_views_notes %}
+      {{feature.web_dev_views_notes|urlize}}
+    {% endif %}
+
+    {% if feature.ergonomics_risks %}
+      <br><br><h4>Ergonomics</h4>
+      {{feature.ergonomics_risks|urlize}}
+    {% endif %}
+
+    {% if feature.activation_risks %}
+      <br><br><h4>Activation</h4>
+      {{feature.activation_risks|urlize}}
+    {% endif %}
+
+    {% if feature.security_risks %}
+      <br><br><h4>Security</h4>
+      {{feature.security_risks|urlize}}
+    {% endif %}
+
+  </div> <!-- end risks -->
+
+{% if 'experiment' in sections_to_show %}
+
+  <br><br><h4>Goals for experimentation</h4>
+  {{feature.experiment_goals|urlize}}
+
+  {% if feature.experiment_timeline %}
+    <br><br><h4>Experimental timeline</h4>
+    {{feature.experiment_timeline|urlize}}
+  {% endif %}
+
+  {% if 'extension_reason' in sections_to_show %}
+    <br><br><h4>Reason this experiment is being extended</h4>
+    {{feature.experiment_extension_reason|urlize}}
+  {% endif %}
+
+  <br><br><h4>Ongoing technical constraints</h4>
+  {{feature.ongoing_constraints|urlize}}
+
+{% endif %}
+
+{% if feature.debuggability %}
+  <br><br><h4>Debuggability</h4>
+  {{feature.debuggability|urlize}}
+{% endif %}
+
+<br><br><h4>Will this feature be supported on all six Blink platforms
+    (Windows, Mac, Linux, Chrome OS, Android, and Android WebView)?</h4>
+{% if feature.all_platforms %}Yes{% else %}No{% endif %}
+{{feature.all_platforms_descr|urlize}}
+
+<br><br><h4>Is this feature fully tested by <a href="https://chromium.googlesource.com/chromium/src/+/master/docs/testing/web_platform_tests.md">web-platform-tests</a>?</h4>
+{% if feature.wpt %}Yes{% else %}No{% endif %}
+{% if feature.wpt_desc %}
+  {{feature.wpt_descr|urlize}}
+{% endif %}
+
+{% if feature.bug_url %}
+  <br><br><h4>Tracking bug</h4>
+  <a href="{{feature.bug_url}}">{{feature.bug_url}}</a>
+{% endif %}
+
+{% if feature.launch_bug_url %}
+  <br><br><h4>Launch bug</h4>
+  <a href="{{feature.launch_bug_url}}">{{feature.launch_bug_url}}</a>
+{% endif %}
+
+{% if 'sample_links' in sections_to_show %}
+   {% if feature.sample_links %}
+     <br><br><h4>Sample links</h4>
+     {% for link in feature.sample_links %}
+       <br><a href="{{link}}">{{link}}</a>
+     {% endfor %}
+   {% endif %}
+{% endif %}
+
+<br><br><h4>Link to entry on the {{APP_TITLE}}</h4>
+<a href="{{default_url}}">{{default_url}}</a>
+
+
+{% if feature.intent_to_implement_url or feature.ready_for_trial_url or feature.intent_to_experiment_url or feature.intent_to_ship_url %}
+  <br><br><h4>Links to previous Intent discussions</h4>
+
+  {% if feature.intent_to_implement_url %}
+    Intent to prototype: {{feature.intent_to_implement_url|urlize}}
+    <br>
+  {% endif %}
+
+  {% if feature.ready_for_trial_url %}
+    Ready for Trial: {{feature.ready_for_trial_url|urlize}}
+    <br>
+  {% endif %}
+
+  {% if feature.intent_to_experiment_url %}
+    Intent to Experiment: {{feature.intent_to_experiment_url|urlize}}
+    <br>
+  {% endif %}
+
+  {% if feature.intent_to_ship_url %}
+    Intent to Ship: {{feature.intent_to_ship_url|urlize}}
+    <br>
+  {% endif %}
+{% endif %}
+
+
+
+<br><br><div><small>
+  This intent message was generated by
+  <a href="https://www.chromestatus.com">Chrome Platform Status</a>.
+</small></div>
+
+</div> <!-- end email body div -->
+
+<p style="padding-bottom: 6em">
+ <!-- work around overlap by floating footer. -->
+</p>
