@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load inline_file %}
+
+{% block css %}
+<!-- <link rel="stylesheet" href="/static/css/metrics/metrics.css"> -->
+<style>{% inline_file "/static/css/metrics/metrics.css" %}</style>
+{% endblock %}
+
+{% block preload %}
+  {% if VULCANIZE %}
+    <link rel="preload" href="/static/elements/metrics-imports.vulcanize.js" as="script">
+  {% endif %}
+{% endblock %}
+
+{% block html_imports %}
+  <link rel="import" href="/static/elements/metrics-imports{% if VULCANIZE %}.vulcanize{% endif %}.html">
+{% endblock %}
+
+{% block drawer %}
+  {% include "metrics/feature/_nav.html" %}
+{% endblock %}
+
+{% block subheader %}
+<div id="subheader">
+  <h2>HTML &amp; JavaScript usage &gt; all features > timeline</h2>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="data-panel">
+  <p class="description">Use of HTML/JS features over time.</p>
+  <chromedash-feature-timeline
+      type="feature" view="popularity"
+      title="Percentage of pages surveyed that use this feature"
+      {% if not prod %}use-remote-data{% endif %}></chromedash-feature-timeline>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+document.addEventListener('WebComponentsReady', function(e) {
+  var timeline = $('chromedash-feature-timeline');
+  timeline.props = {{FEATUREOBSERVER_BUCKETS|safe}};
+
+  document.body.classList.remove('loading');
+
+  window.addEventListener('popstate', function(e) {
+    if (e.state) {
+      timeline.selectedBucketId = e.state.id;
+    }
+  });
+});
+</script>
+{% endblock %}

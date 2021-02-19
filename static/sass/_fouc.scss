@@ -1,0 +1,17 @@
+@import 'vars';
+
+body.loading {
+  chromedash-legend {
+    display: none;
+  }
+
+  chromedash-featurelist {
+    visibility: hidden;
+  }
+
+  .main-toolbar {
+    .dropdown-content {
+      display: none;
+    }
+  }
+}
